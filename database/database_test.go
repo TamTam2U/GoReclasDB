@@ -29,3 +29,18 @@ func TestDb(t *testing.T) {
 	GetDB()
 	assert.Equal(t, GetDB(), GetDB())
 }
+
+func BenchmarkDb(b *testing.B) {
+	config := Config{
+		Host: "localhost",
+		Port: "3306",
+		User: "root",
+		Password: "",
+		Database: "butitin-test",
+		Driver: MySQL,
+	}
+	
+	ConnectMysql(&config)
+	GetDB()
+	assert.Equal(b, GetDB(), GetDB())
+}
