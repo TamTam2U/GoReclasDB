@@ -6,6 +6,8 @@ import (
 	"sync"
 
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 
@@ -18,8 +20,8 @@ var (
 type Driver string
 
 const (
-	MySQL Driver = "mysql"
-	Postgres Driver = "postgres"
+	MySQL Driver = "MYSQL"
+	Postgres Driver = "POSTGRES"
 )
 
 type Config struct {
@@ -31,19 +33,11 @@ type Config struct {
 	Driver Driver
 }
 
-func DB(d Driver) {
-	switch d {
-	case MySQL:
-		connectMysql(&Config{})
-	case Postgres:
-		connectPostgres(&Config{})
-	}
-}
-
-func connectMysql(conf *Config) {
+func ConnectMysql(conf *Config) {
 	once.Do(func() {
 		var err error
-		db, err = gorm.Open("mysql", conf.User+":"+conf.Password+"@tcp("+conf.Host+":"+conf.Port+")/"+conf.Database+"?charset=utf8&parseTime=True&loc=Local")
+		db, err = gorm.Open("mysql", conf.User+":"+conf.Password+"@tcp("+conf.Host+":"+conf.Port+")/"+conf.Database+"?parseTime=true")
+		fmt.Println("mysql",conf.User+":"+conf.Password+"@tcp("+conf.Host+":"+conf.Port+")/"+conf.Database+"?charset=utf8&parseTime=True&loc=Local")
 		if err != nil {
 			log.Fatalf("failed to connect database: %v", err)
 		}
@@ -51,7 +45,7 @@ func connectMysql(conf *Config) {
 	})
 }
 
-func connectPostgres(conf *Config) {
+func ConnectPostgres(conf *Config) {
 	once.Do(func() {
 		var err error
 		db, err = gorm.Open("postgres", conf.User+":"+conf.Password+"@tcp("+conf.Host+":"+conf.Port+")/"+conf.Database+"?charset=utf8&parseTime=True&loc=Local")
