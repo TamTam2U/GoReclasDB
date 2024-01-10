@@ -26,7 +26,6 @@ func TestDb(t *testing.T) {
 	}
 	
 	ConnectMysql(&config)
-	t.Logf("db: %v", GetDB())
 	GetDB()
 	assert.Equal(t, GetDB(), GetDB())
 }
