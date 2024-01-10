@@ -39,8 +39,10 @@ func BenchmarkDb(b *testing.B) {
 		Database: "butitin-test",
 		Driver: MySQL,
 	}
-	
-	ConnectMysql(&config)
-	GetDB()
-	assert.Equal(b, GetDB(), GetDB())
+
+	for i := 0; i < b.N; i++ {
+		ConnectMysql(&config)
+		GetDB()
+		assert.Equal(b, GetDB(), GetDB())
+	}
 }
